@@ -1,0 +1,11 @@
+[build]
+dev-mode-dirs = ['src']
+
+
+
+[metadata.hooks.requirements_txt]
+files = ['requirements/base.txt']
+
+
+[metadata.hooks.requirements_txt.optional-dependencies]
+dev = ['requirements/dev.txt']

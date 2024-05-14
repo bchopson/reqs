@@ -1,0 +1,15 @@
+[build-system]
+requires = ['hatchling', 'hatch-requirements-txt']
+build-backend = 'hatchling.build'
+
+
+[project]
+name = 'reqs'
+authors = [{name = "Randy Syring", email = "randy@syrings.us"}]
+version = '0.1'
+dynamic = ['dependencies', 'optional-dependencies']
+
+
+[project.scripts]
+"reqs" = "reqs.cli:main"
+

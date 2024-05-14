@@ -1,0 +1,9 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 54db5b6
+_src_path: .
+author_email: randy@syrings.us
+author_name: Randy Syring
+project_name: reqs
+py_module: reqs
+python_version: '3.12'
+script_name: reqs
