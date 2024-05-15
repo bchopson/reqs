@@ -5,11 +5,16 @@ build-backend = 'hatchling.build'
 
 [project]
 name = 'reqs'
-authors = [{name = "Randy Syring", email = "randy@syrings.us"}]
+authors = [{name = 'Randy Syring', email = 'randy.syring@level12.io'}]
 version = '0.1'
 dynamic = ['dependencies', 'optional-dependencies']
 
 
 [project.scripts]
-"reqs" = "reqs.cli:main"
+'reqs' = 'reqs.cli:main'
+
+
+[tool.reqs]
+
+sync_pipx = true
 
