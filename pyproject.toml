@@ -20,4 +20,3 @@ dynamic = ['dependencies', 'optional-dependencies', 'version']
 [tool.reqs]
 
 sync_pipx = true
-

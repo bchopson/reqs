@@ -5,4 +5,3 @@ pytest-cov
 # App specific (ditto)
 click
 pip-tools
-

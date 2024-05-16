@@ -5,4 +5,3 @@ python = "3.12"
 [env]
 _.python.venv.path = "{{env.WORKON_HOME}}/reqs"
 _.python.venv.create = true
-

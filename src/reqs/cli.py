@@ -1,13 +1,12 @@
 import logging
 from os import environ
 from pathlib import Path
-from pprint import pprint
 import sys
 
 import click
 
 from . import config
-from .utils import pip, pip_sync, pipx_install, reqs_compile, uv
+from .utils import pip, pip_sync, pipx_install, reqs_compile
 
 
 log = logging.getLogger()
