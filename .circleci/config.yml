@@ -15,7 +15,7 @@ jobs:
       - run:
           name: install testing helpers needed at OS level
           command: |
-              python -m pip install nox
+              python -m pip install nox uv
               python --version
               python -m nox --version
 
