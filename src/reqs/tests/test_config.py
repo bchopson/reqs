@@ -20,8 +20,8 @@ class TestConfig:
         assert not c.sync_pipx
         assert c.depends == [
             config.Depends('base.in', []),
-            config.Depends('ci.in', ['base.txt']),
-            config.Depends('dev.in', ['base.txt', 'ci.txt']),
+            config.Depends('ci.in', []),
+            config.Depends('dev.in', ['base.txt']),
         ]
 
     def test_depends_explicit(self):

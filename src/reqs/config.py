@@ -6,8 +6,8 @@ import warnings
 
 DEFAULT_DEPENDS = {
     'base.in': [],
-    'ci.in': ['base.txt'],
-    'dev.in': ['base.txt', 'ci.txt'],
+    'ci.in': [],
+    'dev.in': ['base.txt'],
 }
 
 
