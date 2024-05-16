@@ -2,11 +2,12 @@ import logging
 from os import environ
 from pathlib import Path
 from pprint import pprint
+import sys
 
 import click
 
 from . import config
-from .utils import pip, pip_sync, pipx_install, reqs_compile
+from .utils import pip, pip_sync, pipx_install, reqs_compile, uv
 
 
 log = logging.getLogger()
@@ -16,7 +17,7 @@ def conf_prep() -> config.Config:
     cwd = Path.cwd()
     conf: config.Config = config.load(cwd)
     dpath_relative: str = conf.reqs_dpath.relative_to(conf.pkg_dpath)
-    print(f'Requirements directory: {dpath_relative}')
+    log.debug(f'Requirements directory: {dpath_relative}')
 
     return conf
 
@@ -27,15 +28,24 @@ def _compile(force: bool, conf: config.Config):
 
 
 @click.group()
-def reqs():
-    pass
+@click.option('--quiet', is_flag=True)
+@click.option('--verbose', is_flag=True)
+def reqs(quiet: bool, verbose: bool):
+    level = logging.WARNING if quiet else (logging.DEBUG if verbose else logging.INFO)
+    logging.getLogger('reqs').setLevel(level)
+    logging.basicConfig(level=level, format='%(levelname)8s %(message)s')
 
 
 @reqs.command()
-def bootstrap():
+@click.option('--uv/--no-uv', 'use_uv', default=True)
+def bootstrap(use_uv: bool):
     """Upgrade pip & install pip-tools"""
-    print('Upgrading pip and installing pip-tools')
-    pip('install', '--quiet', '-U', 'pip', 'pip-tools')
+    if use_uv:
+        log.info('Installing and/or upgrading uv')
+        pip('install', '--quiet', '-U', 'uv')
+    else:
+        log.info('Upgrading pip and installing pip-tools')
+        pip('install', '--quiet', '-U', 'pip', 'pip-tools')
 
 
 @reqs.command('config')
@@ -43,7 +53,9 @@ def _config():
     """Show reqs config"""
     conf = conf_prep()
     print(conf)
-    print('pip', '--version:', pip('--version'))
+    pip('--version')
+    print(sys.executable)
+    print('PATH:', environ.get('PATH'))
 
 
 @reqs.command()
@@ -65,10 +77,10 @@ def sync(req_fname: str, compile: bool, force: bool):
     if compile:
         _compile(force, conf)
 
-    if venv_name := environ.get('VIRTUAL_ENV'):
+    if venv_path := environ.get('VIRTUAL_ENV'):
         # Install reqs into active venv
         reqs_fpath = conf.reqs_dpath / req_fname
-        print(f'Installing {reqs_fpath.relative_to(conf.pkg_dpath)} to venv @ {venv_name}')
+        log.info(f'Installing {reqs_fpath.relative_to(conf.pkg_dpath)} to venv @ {venv_path}')
         pip_sync('--quiet', reqs_fpath)
         pip('install', '--quiet', '-e', conf.pkg_dpath)
     else:

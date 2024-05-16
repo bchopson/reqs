@@ -1,18 +1,71 @@
+import logging
+from os import environ
 from pathlib import Path
+import shlex
 import subprocess
 
 
-def run(*args, check=True, **kwargs):
+log = logging.getLogger(__name__)
+
+
+def run(*args, **kwargs):
+    kwargs.setdefault('check', True)
     args = args + kwargs.pop('args', ())
+
+    # Shlex doesn't handle Path objects
+    args = [arg if not isinstance(arg, Path) else str(arg) for arg in args]
+    log.debug(f'Run: {shlex.join(args)}\nkwargs: {kwargs}')
+
     return subprocess.run(args, **kwargs)
 
 
+def venv_bin(bin_name: str, *args, **kwargs):
+    venv_path = environ.get('VIRTUAL_ENV')
+    if not venv_path:
+        raise Exception(
+            'No VIRTUAL_ENV environment variable set.  reqs only works in virtual envs.',
+        )
+    return Path(venv_path).joinpath('bin', bin_name)
+
+
+def uv(*args, **kwargs):
+    uv = venv_bin('uv')
+    run(uv, args=args, **kwargs)
+
+
 def pip(*args, **kwargs):
-    run('pip', args=args, **kwargs)
+    uv = venv_bin('uv')
+    if uv.exists():
+        pip_bin = uv
+        args = 'pip', *args
+    else:
+        pip_bin = venv_bin('pip')
+        log.debug(f'{uv} not present, falling back to {pip_bin}')
+
+    run(pip_bin, args=args, **kwargs)
 
 
 def pip_sync(*args, **kwargs):
-    run('pip-sync', args=args, **kwargs)
+    uv = venv_bin('uv')
+    if uv.exists():
+        sync_bin = uv
+        args = 'pip', 'sync', *args
+    else:
+        sync_bin = venv_bin('pip-sync')
+
+    run(sync_bin, args=args, **kwargs)
+
+
+def pip_compile(*args, **kwargs):
+    uv = venv_bin('uv')
+    if uv.exists():
+        compile_bin = uv
+        args = 'pip', 'compile', *args
+    else:
+        compile_bin = venv_bin('pip-compile')
+        log.debug(f'{uv} not present, falling back to {compile_bin}')
+
+    run(compile_bin, args=args, **kwargs)
 
 
 def pipx_install(cmd, *args, **kwargs):
@@ -35,8 +88,7 @@ def reqs_compile(force: bool, reqs_dpath: Path, in_fname: str, *dep_fnames: list
 
     if force or reqs_stale(txt_fpath, dep_fpaths):
         print(f'Compiling: {in_fname}')
-        run(
-            'pip-compile',
+        pip_compile(
             '--quiet',
             '--strip-extras',
             '--annotate',

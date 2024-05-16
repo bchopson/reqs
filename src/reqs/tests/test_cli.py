@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from dataclasses import dataclass
+import logging
 import os
 from pathlib import Path
 from unittest import mock
@@ -57,11 +58,11 @@ class TestCLI:
         reqs_dpath = inv.pkg_dpath / 'requirements'
 
         assert not inv.result.stderr
-        assert inv.result.stdout == 'Requirements directory: requirements\n'
+        assert not inv.result.stdout
         assert m_reqs_compile.mock_calls == [
             mock.call(False, reqs_dpath, 'base.in'),
-            mock.call(False, reqs_dpath, 'ci.in'),
             mock.call(False, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'ci.in', 'dev.txt'),
         ]
 
     @mock.patch.object(cli, 'reqs_compile')
@@ -71,8 +72,8 @@ class TestCLI:
 
         assert m_reqs_compile.mock_calls == [
             mock.call(True, reqs_dpath, 'base.in'),
-            mock.call(True, reqs_dpath, 'ci.in'),
             mock.call(True, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(True, reqs_dpath, 'ci.in', 'dev.txt'),
         ]
 
     @mock.patch.object(cli, 'reqs_compile')
@@ -81,24 +82,25 @@ class TestCLI:
         inv: Invoke = invoke('pkg1', 'compile', '--force', pkg_chdir='foo')
 
         assert not inv.result.stderr
-        assert inv.result.stdout == 'Requirements directory: requirements\n'
+        assert not inv.result.stdout
 
     @mock.patch.object(cli, 'pip')
     @mock.patch.object(cli, 'pip_sync')
     @mock.patch.object(cli, 'reqs_compile')
-    def test_sync(self, m_reqs_compile, m_pip_sync, m_pip):
+    def test_sync(self, m_reqs_compile, m_pip_sync, m_pip, caplog):
+        caplog.set_level(logging.INFO)
+
         inv: Invoke = invoke('pkg1', 'sync', pkg_chdir='foo', VIRTUAL_ENV='pkg1')
         reqs_dpath = inv.pkg_dpath / 'requirements'
 
         assert not inv.result.stderr
-        assert inv.result.stdout.splitlines() == [
-            'Requirements directory: requirements',
+        assert [rec.message for rec in caplog.records] == [
             'Installing requirements/dev.txt to venv @ pkg1',
         ]
         assert m_reqs_compile.mock_calls == [
             mock.call(False, reqs_dpath, 'base.in'),
-            mock.call(False, reqs_dpath, 'ci.in'),
             mock.call(False, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'ci.in', 'dev.txt'),
         ]
         assert m_pip_sync.mock_calls == [
             mock.call('--quiet', reqs_dpath / 'dev.txt'),
@@ -122,7 +124,7 @@ class TestCLI:
             inv: Invoke = invoke('pkg2', 'sync', '--no-compile')
 
         assert not inv.result.stderr
-        assert inv.result.stdout == 'Requirements directory: reqs\n'
+        assert not inv.result.stdout
         assert m_reqs_compile.mock_calls == []
         assert m_pip_sync.mock_calls == []
         assert m_pip.mock_calls == []
