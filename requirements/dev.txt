@@ -5,9 +5,7 @@ anyio==4.3.0 \
 argcomplete==3.3.0 \
     --hash=sha256:c168c3723482c031df3c207d4ba8fa702717ccb9fc0bfe4117166c1f537b4a54 \
     --hash=sha256:fd03ff4a5b9e6580569d34b273f741e85cd9e072f3feeeee3eba4891c70eda62
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   nox
+    # via nox
 build==1.2.1 \
     --hash=sha256:526263f4870c26f26c433545579475377b2b7588b6f1eac76a001e873ae3e19d \
     --hash=sha256:75e10f767a433d9a86e50d83f418e83efc18ede923ee5ff7df93b6cb0306c5d4
@@ -86,9 +84,7 @@ click==8.1.7 \
 colorlog==6.8.2 \
     --hash=sha256:3e3e079a41feb5a1b64f978b5ea4f46040a94f11f0e8bbb8261e3dbbeca64d44 \
     --hash=sha256:4dcbb62368e2800cb3c5abd348da7e53f6c362dda502ec27c560b2e58a66bd33
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   nox
+    # via nox
 cryptography==42.0.7 \
     --hash=sha256:02c0eee2d7133bdbbc5e24441258d5d2244beb31da5ed19fbb80315f4bbbff55 \
     --hash=sha256:0d563795db98b4cd57742a78a288cdbdc9daedac29f2239793071fe114f13785 \
@@ -126,15 +122,11 @@ cryptography==42.0.7 \
 distlib==0.3.8 \
     --hash=sha256:034db59a0b96f8ca18035f36290806a9a6e6bd9d1ff91e45a7f172eb17e51784 \
     --hash=sha256:1530ea13e350031b6312d8580ddb6b27a104275a31106523b8f123787f494f64
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   virtualenv
+    # via virtualenv
 filelock==3.14.0 \
     --hash=sha256:43339835842f110ca7ae60f1e1c160714c5a6afd15a2873419ab185334975c0f \
     --hash=sha256:6ea72da3be9b8c82afd3edcf99f2fffbb5076335a5ae4d03248bb5b6c3eae78a
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   virtualenv
+    # via virtualenv
 h11==0.14.0 \
     --hash=sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d \
     --hash=sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761
@@ -211,15 +203,12 @@ more-itertools==10.2.0 \
 nox==2024.4.15 \
     --hash=sha256:6492236efa15a460ecb98e7b67562a28b70da006ab0be164e8821177577c0565 \
     --hash=sha256:ecf6700199cdfa9e5ea0a41ff5e6ef4641d09508eda6edb89d9987864115817f
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/dev.in
+    # via -r /home/rsyring/projects/reqs-pkg/requirements/dev.in
 packaging==24.0 \
     --hash=sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5 \
     --hash=sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9
     # via
     #   -r /home/rsyring/projects/reqs-pkg/requirements/base.txt
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
     #   build
     #   hatch
     #   hatchling
@@ -241,7 +230,6 @@ platformdirs==4.2.2 \
     --hash=sha256:2d7a1657e36a80ea911db832a8a6ece5ee53d8de21edd5cc5879af6530b1bfee \
     --hash=sha256:38b7b51f512eed9e84a22788b4bce1de17c0adb134d6becb09836e37d8654cd3
     # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
     #   hatch
     #   virtualenv
 pluggy==1.5.0 \
@@ -326,14 +314,11 @@ uv==0.1.44 \
     --hash=sha256:d82c7338f8bcb0551672e759e4115c035246321059692416ee03ebe08629b913 \
     --hash=sha256:e247dca0d8d42d71032ac99ef3d72a4fcbad4ae3114ef5979878a81a40fed274 \
     --hash=sha256:e8cb1047b8f81ef09e15ec8d1b8dfc371594232e2e4f3ef3acf8991fcda20a57
-    # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
-    #   hatch
+    # via hatch
 virtualenv==20.26.2 \
     --hash=sha256:82bf0f4eebbb78d36ddaee0283d43fe5736b53880b8a8cdcd37390a07ac3741c \
     --hash=sha256:a624db5e94f01ad993d476b9ee5346fdf7b9de43ccaee0e0197012dc838a0e9b
     # via
-    #   -r /home/rsyring/projects/reqs-pkg/requirements/ci.txt
     #   hatch
     #   nox
 wheel==0.43.0 \

@@ -21,9 +21,7 @@ nox==2024.4.15 \
 packaging==24.0 \
     --hash=sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5 \
     --hash=sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9
-    # via
-    #   -c /home/rsyring/projects/reqs-pkg/requirements/base.txt
-    #   nox
+    # via nox
 platformdirs==4.2.2 \
     --hash=sha256:2d7a1657e36a80ea911db832a8a6ece5ee53d8de21edd5cc5879af6530b1bfee \
     --hash=sha256:38b7b51f512eed9e84a22788b4bce1de17c0adb134d6becb09836e37d8654cd3
@@ -46,7 +44,7 @@ uv==0.1.44 \
     --hash=sha256:d82c7338f8bcb0551672e759e4115c035246321059692416ee03ebe08629b913 \
     --hash=sha256:e247dca0d8d42d71032ac99ef3d72a4fcbad4ae3114ef5979878a81a40fed274 \
     --hash=sha256:e8cb1047b8f81ef09e15ec8d1b8dfc371594232e2e4f3ef3acf8991fcda20a57
-    # via -r /home/rsyring/projects/reqs-pkg/requirements/ci.in
+    # via nox
 virtualenv==20.26.2 \
     --hash=sha256:82bf0f4eebbb78d36ddaee0283d43fe5736b53880b8a8cdcd37390a07ac3741c \
     --hash=sha256:a624db5e94f01ad993d476b9ee5346fdf7b9de43ccaee0e0197012dc838a0e9b
