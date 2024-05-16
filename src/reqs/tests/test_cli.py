@@ -60,7 +60,8 @@ class TestCLI:
         assert inv.result.stdout == 'Requirements directory: requirements\n'
         assert m_reqs_compile.mock_calls == [
             mock.call(False, reqs_dpath, 'base.in'),
-            mock.call(False, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'ci.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'dev.in', 'base.txt', 'ci.txt'),
         ]
 
     @mock.patch.object(cli, 'reqs_compile')
@@ -70,7 +71,8 @@ class TestCLI:
 
         assert m_reqs_compile.mock_calls == [
             mock.call(True, reqs_dpath, 'base.in'),
-            mock.call(True, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(True, reqs_dpath, 'ci.in', 'base.txt'),
+            mock.call(True, reqs_dpath, 'dev.in', 'base.txt', 'ci.txt'),
         ]
 
     @mock.patch.object(cli, 'reqs_compile')
@@ -95,7 +97,8 @@ class TestCLI:
         ]
         assert m_reqs_compile.mock_calls == [
             mock.call(False, reqs_dpath, 'base.in'),
-            mock.call(False, reqs_dpath, 'dev.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'ci.in', 'base.txt'),
+            mock.call(False, reqs_dpath, 'dev.in', 'base.txt', 'ci.txt'),
         ]
         assert m_pip_sync.mock_calls == [
             mock.call('--quiet', reqs_dpath / 'dev.txt'),
