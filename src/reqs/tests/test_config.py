@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-
 from reqs import config
 
 
@@ -20,7 +18,8 @@ class TestConfig:
         assert not c.sync_pipx
         assert c.depends == [
             config.Depends('base.in', []),
-            config.Depends('dev.in', ['base.txt']),
+            config.Depends('ci.in', ['base.txt']),
+            config.Depends('dev.in', ['base.txt', 'ci.txt']),
         ]
 
     def test_depends_explicit(self):

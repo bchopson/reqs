@@ -6,7 +6,8 @@ import warnings
 
 DEFAULT_DEPENDS = {
     'base.in': [],
-    'dev.in': ['base.txt'],
+    'ci.in': ['base.txt'],
+    'dev.in': ['base.txt', 'ci.txt'],
 }
 
 
@@ -47,7 +48,7 @@ def default_depends(reqs_dpath: Path):
     in_fpaths = sorted(reqs_dpath.glob('*.in'))
     names = {path.name for path in in_fpaths}
 
-    if names == {'base.in', 'dev.in'}:
+    if names == {'base.in', 'dev.in', 'ci.in'}:
         return DEFAULT_DEPENDS
 
     if len(in_fpaths) > 1:
