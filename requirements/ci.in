@@ -1,8 +1,8 @@
+-c base.txt
+
 # From copier-py-package (keep comment for easier copier upgrades)
-pytest
+nox
+uv
 
 
 # App specific (ditto)
-click
-pip-tools
-

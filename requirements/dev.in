@@ -1,6 +1,10 @@
 -r base.txt
+-r ci.txt
 
-# Tools needed by copier-py-package packages
+# From copier-py-package (keep comment for easier copier upgrades)
 click
 hatch
 nox
+
+
+# App specific (ditto)
