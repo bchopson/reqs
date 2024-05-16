@@ -65,11 +65,11 @@ def sync(req_fname: str, compile: bool, force: bool):
     if compile:
         _compile(force, conf)
 
-    if 'VIRTUAL_ENV' in environ:
+    if venv_name := environ.get('VIRTUAL_ENV'):
         # Install reqs into active venv
         reqs_fpath = conf.reqs_dpath / req_fname
-        print(f'Installing {reqs_fpath.relative_to(conf.pkg_dpath)}')
-        pip_sync(reqs_fpath)
+        print(f'Installing {reqs_fpath.relative_to(conf.pkg_dpath)} to venv @ {venv_name}')
+        pip_sync('--quiet', reqs_fpath)
         pip('install', '--quiet', '-e', conf.pkg_dpath)
     else:
         log.warning('Virtualenv not activated, skipping venv sync')

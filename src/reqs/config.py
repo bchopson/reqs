@@ -44,7 +44,7 @@ class Depends:
 
 
 def default_depends(reqs_dpath: Path):
-    in_fpaths = list(reqs_dpath.glob('*.in'))
+    in_fpaths = sorted(reqs_dpath.glob('*.in'))
     names = {path.name for path in in_fpaths}
 
     if names == {'base.in', 'dev.in'}:

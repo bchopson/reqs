@@ -91,14 +91,14 @@ class TestCLI:
         assert not inv.result.stderr
         assert inv.result.stdout.splitlines() == [
             'Requirements directory: requirements',
-            'Installing requirements/dev.txt',
+            'Installing requirements/dev.txt to venv @ pkg1',
         ]
         assert m_reqs_compile.mock_calls == [
             mock.call(False, reqs_dpath, 'base.in'),
             mock.call(False, reqs_dpath, 'dev.in', 'base.txt'),
         ]
         assert m_pip_sync.mock_calls == [
-            mock.call(reqs_dpath / 'dev.txt'),
+            mock.call('--quiet', reqs_dpath / 'dev.txt'),
         ]
         assert m_pip.mock_calls == [
             mock.call('install', '--quiet', '-e', inv.pkg_dpath),

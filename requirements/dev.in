@@ -1,5 +1,6 @@
 -r base.txt
 
-# copier-py-package deps
+# Tools needed by copier-py-package packages
 click
 hatch
+nox
