@@ -16,3 +16,6 @@
 
 # Pycharm / JetBrains clutter
 .idea
+
+# Project builds
+dist

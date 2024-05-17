@@ -8,10 +8,10 @@ build-backend = 'hatchling.build'
 
 
 [project]
-name = 'reqs'
+name = 'reqs-cli'
 authors = [{name = 'Randy Syring', email = 'randy.syring@level12.io'}]
 dynamic = ['dependencies', 'optional-dependencies', 'version']
-
+readme = 'readme.md'
 
 [project.scripts]
 'reqs' = 'reqs.cli:reqs'
