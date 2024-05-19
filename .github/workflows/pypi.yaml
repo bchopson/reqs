@@ -1,9 +1,18 @@
+# Example:
+#  - https://github.com/pallets/flask/blob/main/.github/workflows/tests.yaml
+# TODO:
+# GH release
+# Environment protection
+#  - https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+# Separate build & release
 name: pypi publish
 
 on:
-  push
-    # tags:
-    #   - 'v*.*.*'  # Triggers on version tags like v1.0.0
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
