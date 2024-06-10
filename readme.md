@@ -16,7 +16,7 @@ Helps with Python requirements (reqs) files:
         installing/upgrading as an editable package with pipx.
 
 
-# Install
+## Install
 
 Intended to be installed at the user level, not per app.
 
@@ -24,7 +24,7 @@ Intended to be installed at the user level, not per app.
 - `[uv] pip install --user reqs-cli`
 
 
-# Configuration
+## Configuration
 
 Configure using `pyproject.toml`:
 
@@ -42,3 +42,13 @@ dpath = 'requirements'
 # deployed on servers.
 sync_pipx = false
 ```
+
+
+## Development
+
+- Can be updated from [copier-py-package](https://github.com/level12/copier-py-package)
+    - `hatch run copier:update`: latest tagged version in GitHub
+    - `hatch run copier:update-head`: head of master in GitHub
+- Release:
+    - `mise run bump [-- --help]` to update version, tag, and push to GitHub
+    - GitHub workflow does the rest
