@@ -3,7 +3,7 @@
 *.coverage
 /.tox
 /.nonx
-/coverage.xml
+/coverage*.xml
 /.pytests.xml
 /htmlcov
 .pytest_cache
@@ -19,3 +19,5 @@
 
 # Project builds
 dist
+
+src/reqs/tests/pkg*/requirements/*.txt

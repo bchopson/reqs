@@ -1,14 +1,6 @@
 import dataclasses as dc
 from pathlib import Path
 import tomllib
-import warnings
-
-
-DEFAULT_DEPENDS = {
-    'base.in': [],
-    'dev.in': ['base.txt'],
-    'ci.in': ['dev.txt'],
-}
 
 
 def find_upwards(d: Path, filename: str):
@@ -33,40 +25,10 @@ def deep_get(d: dict, dotted_path: str, default=None):
 
 
 @dc.dataclass
-class Depends:
-    fname: str
-    depends_on: list[str]
-
-    def __post_init__(self):
-        if self.depends_on in ('', False):
-            self.depends_on = []
-        elif isinstance(self.depends_on, str):
-            self.depends_on = [self.depends_on]
-
-
-def default_depends(reqs_dpath: Path):
-    in_fpaths = sorted(reqs_dpath.glob('*.in'))
-    names = {path.name for path in in_fpaths}
-
-    if names == {'base.in', 'dev.in', 'ci.in'}:
-        return DEFAULT_DEPENDS
-
-    if len(in_fpaths) > 1:
-        # TODO: this warning is thrown even when dependencies have been specified
-        warnings.warn(
-            'More than one .in file and no dependencies specified in the config.',
-            stacklevel=3,
-        )
-
-    return {path.name: '' for path in in_fpaths}
-
-
-@dc.dataclass
 class Config:
     pkg_dpath: Path
     reqs_dpath: Path
     sync_pipx: bool
-    depends: list[Depends]
 
     def as_dict(self):
         return dc.asdict(self)
@@ -105,10 +67,12 @@ def load(start_at: Path):
     reqs_dpath = pkg_dpath.joinpath(
         deep_get(proj_config, 'tool.reqs.dpath', 'requirements'),
     )
-    depends = deep_get(proj_config, 'tool.reqs.depends', default_depends(reqs_dpath))
+
+    if deep_get(proj_config, 'tool.reqs.depends') is not None:
+        raise RuntimeError('reqs.depends is no longer needed, please remove.')
+
     return Config(
         pkg_dpath=pkg_dpath,
         reqs_dpath=reqs_dpath,
         sync_pipx=deep_get(proj_config, 'tool.reqs.sync_pipx', False),
-        depends=[Depends(k, v) for k, v in depends.items()],
     )

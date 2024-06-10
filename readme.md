@@ -1,21 +1,27 @@
 reqs
 ====
 
-Bootstrap, compile, and sync Python requirements files
+Helps with Python requirements (reqs) files:
+
+- `reqs bootstrap`:
+    - Install uv (default) or upgrade pip & install pip-tools to active venv
+    - Ensures reqs will compile lock files using the version of Python the project is using
+- `reqs compile`:
+    - Compile .in reqs files into .txt "lock" files
+    - Considers file modification times and file dependencies (when -r or -c used)
+- `reqs sync`:
+    - Compile (default, optional)
+    - Sync active virtualenv with lock files
+    - When "sync_pipx" is true: will make the project's scripts available on the local system by
+        installing/upgrading as an editable package with pipx.
+
 
 # Install
 
-Intended to be used with pipx
+Intended to be installed at the user level, not per app.
 
-- manually & first install: `pipx install -e .../apps/reqs-pkg`; or
-- when developing: `cd .../apps/reqs-pkg;` [`reqs`](../reqs-pkg/) `sync`
-
-
-## Usage
-
-- `reqs bootstrap`: Upgrade pip & install pip-tools
-- `reqs compile`:  Compile .in to .txt when needed (based on file modification times)
-- `reqs sync`: Compile and then update active venv and maybe pipx to match spec
+- `pipx install reqs-cli` (recommended)
+- `[uv] pip install --user reqs-cli`
 
 
 # Configuration
@@ -35,10 +41,4 @@ dpath = 'requirements'
 # that a developer would want available for different projects.  False for most client projects
 # deployed on servers.
 sync_pipx = false
-
-[tool.reqs.depends]
-# Define dependencies between files so `reqs compile` knows when a .in needs to be compiled and
-# what order to use when compiling multiple files.
-'base.in' = ''
-'dev.in' = 'base.txt'
 ```

@@ -1,0 +1,6 @@
+-r base.txt
+
+uv
+coverage
+pytest
+pytest-cov

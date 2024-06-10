@@ -1,7 +1,6 @@
--r base.txt
+-r testing.txt
 
 # From copier-py-package (keep comment for easier copier upgrades)
-click
 hatch
 nox[uv]
 pre-commit

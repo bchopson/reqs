@@ -1,7 +1,3 @@
-# From copier-py-package (keep comment for easier copier upgrades)
-pytest
-pytest-cov
-
-# App specific (ditto)
+# App specific
 click
-pip-tools
+pip-requirements-parser

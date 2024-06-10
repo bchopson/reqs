@@ -1,3 +1,4 @@
+from collections.abc import Iterable as Iter
 import logging
 from os import environ
 from pathlib import Path
@@ -6,7 +7,7 @@ import sys
 import click
 
 from . import config
-from .utils import pip, pip_sync, pipx_install, reqs_compile
+from .utils import DepHandler, pip, pip_sync, pipx_install
 
 
 log = logging.getLogger()
@@ -21,9 +22,8 @@ def conf_prep() -> config.Config:
     return conf
 
 
-def _compile(force: bool, conf: config.Config):
-    for dep in conf.depends:
-        reqs_compile(force, conf.reqs_dpath, dep.fname, *dep.depends_on)
+def compile_all(force: bool, conf: config.Config, upgrade_packages: Iter[str] = ()):
+    DepHandler(conf.reqs_dpath).compile_all(force, upgrade_packages)
 
 
 @click.group()
@@ -38,7 +38,7 @@ def reqs(quiet: bool, verbose: bool):
 @reqs.command()
 @click.option('--uv/--no-uv', 'use_uv', default=True)
 def bootstrap(use_uv: bool):
-    """Upgrade pip & install pip-tools"""
+    """Install uv (default) or pip-tools to compile .in files"""
     if use_uv:
         log.info('Installing and/or upgrading uv')
         pip('install', '--quiet', '-U', 'uv')
@@ -62,7 +62,15 @@ def _config():
 def compile(force: bool):
     """Compile .in to .txt when needed"""
     conf = conf_prep()
-    _compile(force, conf)
+    compile_all(force, conf)
+
+
+@reqs.command()
+@click.argument('packages', nargs=-1)
+def upgrade(packages: list[str]):
+    """Upgrade package(s) to latest version"""
+    conf = conf_prep()
+    compile_all(True, conf, packages)
 
 
 @reqs.command()
@@ -74,7 +82,7 @@ def sync(req_fname: str, compile: bool, force: bool):
     conf = conf_prep()
 
     if compile:
-        _compile(force, conf)
+        compile_all(force, conf)
 
     if venv_path := environ.get('VIRTUAL_ENV'):
         # Install reqs into active venv

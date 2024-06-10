@@ -11,13 +11,11 @@ nox.options.default_venv_backend = 'uv'
 
 
 @nox.session
-def tests(session: nox.Session):
-    session.install('-r', 'requirements/base.txt')
-    session.install('e', '.')
+def pytest(session: nox.Session):
+    session.install('-r', 'requirements/testing.txt')
+    session.install('-e', '.')
     session.run(
         'pytest',
-        # use our pytest.ini for warning management
-        '-c=ci/pytest.ini',
         '-ra',
         '--tb=native',
         '--strict-markers',
@@ -37,6 +35,5 @@ def standards(session: nox.Session):
     session.run(
         'pre-commit',
         'run',
-        '--show-diff-on-failure',
         '--all-files',
     )

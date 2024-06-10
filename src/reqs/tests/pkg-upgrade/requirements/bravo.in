@@ -1,0 +1,3 @@
+-r charlie.txt
+
+pluggy == 1.4.0
