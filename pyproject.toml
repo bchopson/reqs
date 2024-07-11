@@ -16,7 +16,8 @@ readme = 'readme.md'
 [project.scripts]
 'reqs' = 'reqs.cli:reqs'
 
+[project.urls]
+Source = "https://github.com/level12/reqs"
 
 [tool.reqs]
-
 sync_pipx = true
