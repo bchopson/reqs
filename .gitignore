@@ -20,4 +20,8 @@
 # Project builds
 dist
 
+# Mise local config file
+/mise/*.local.toml
+
+# Project specific
 src/reqs/tests/pkg*/requirements/*.txt
