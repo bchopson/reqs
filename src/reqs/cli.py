@@ -2,12 +2,13 @@ from collections.abc import Iterable as Iter
 import logging
 from os import environ
 from pathlib import Path
+import shutil
 import sys
 
 import click
 
 from . import config
-from .utils import DepHandler, pip, pip_sync, pipx_install
+from .utils import DepHandler, pip, pip_sync, pipx_install, uv
 
 
 log = logging.getLogger()
@@ -37,7 +38,10 @@ def reqs(quiet: bool, verbose: bool):
 
 @reqs.command()
 @click.option('--uv/--no-uv', 'use_uv', default=True)
-def bootstrap(use_uv: bool):
+@click.option('--venv', 'new_venv', is_flag=True, help='Recreate active venv')
+@click.option('--sync', 'do_sync', is_flag=True)
+@click.pass_context
+def bootstrap(ctx: click.Context, use_uv: bool, new_venv: bool, do_sync: bool):
     """Install uv (default) or pip-tools to compile .in files"""
     if use_uv:
         log.info('Installing and/or upgrading uv')
@@ -45,6 +49,21 @@ def bootstrap(use_uv: bool):
     else:
         log.info('Upgrading pip and installing pip-tools')
         pip('install', '--quiet', '-U', 'pip', 'pip-tools')
+
+    if new_venv and (venv_path := environ.get('VIRTUAL_ENV')):
+        venv_path = Path(venv_path)
+        venv_tmp = venv_path.with_suffix('.tmp')
+        uv('venv', venv_tmp)
+        uv('pip', 'install', '--prefix', venv_tmp, 'uv', 'pip')
+        shutil.rmtree(venv_path)
+        venv_tmp.rename(venv_path)
+        print('New virtualenv at:', venv_path)
+    elif new_venv:
+        print('Can only use --venv with existing active venv.')
+
+    if do_sync:
+        print('Syncing...')
+        ctx.invoke(sync)
 
 
 @reqs.command('config')
