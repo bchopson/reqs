@@ -122,7 +122,7 @@ class Dep:
         if txt_mtime <= max(need.stat().st_mtime for need in self.needs):
             return True
 
-    def compile(self, force: bool, upgrade_packages: Iter[str]):
+    def compile(self, force: bool, upgrade_packages: Iter[str], generate_hashes=False):
         if self.compiled:
             log.debug('already compiled: %s', self.path)
             return
@@ -130,18 +130,23 @@ class Dep:
         if force or self.txt_stale():
             log.info('compiling: %s', self.path.name)
 
+            compile_args = [
+                '--quiet',
+                '--strip-extras',
+                '--annotate',
+                '--no-header',
+                '--output-file',
+            ]
+            if generate_hashes:
+                compile_args.append('--generate-hashes')
+
             extra_args = []
             for pkg in upgrade_packages:
                 extra_args.append('--upgrade-package')
                 extra_args.append(pkg)
 
             pip_compile(
-                '--quiet',
-                '--strip-extras',
-                '--annotate',
-                '--generate-hashes',
-                '--no-header',
-                '--output-file',
+                *compile_args,
                 self.path.with_suffix('.txt'),
                 self.path,
                 *extra_args,
@@ -156,7 +161,7 @@ class DepHandler:
     def __init__(self, reqs_dpath: Path):
         self.reqs_dpath: Path = reqs_dpath
 
-    def compile_all(self, force: bool = False, upgrade_packages: Iter[str] = ()):
+    def compile_all(self, force: bool = False, upgrade_packages: Iter[str] = (), generate_hashes=False):
         reqs_files: dict[Path, Dep] = {p: Dep(p) for p in sorted(self.reqs_dpath.glob('*.in'))}
 
         if not reqs_files:
@@ -165,7 +170,7 @@ class DepHandler:
 
         os.chdir(self.reqs_dpath.parent)
         for dep in list(reqs_files.values()):
-            self._compile(reqs_files, dep, force, upgrade_packages)
+            self._compile(reqs_files, dep, force, upgrade_packages, generate_hashes)
 
     def _compile(
         self,
@@ -173,6 +178,7 @@ class DepHandler:
         dep: Dep,
         force: bool,
         upgrade_packages: Iter[str],
+        generate_hashes=False,
     ):
         for needs_fpath in dep.needs:
             # TODO: I don't know that this is needed
@@ -188,6 +194,6 @@ class DepHandler:
 
             need_dep: Dep = reqs_files.get(needs_fpath) or Dep(needs_fpath)
             reqs_files[needs_fpath] = need_dep
-            self._compile(reqs_files, need_dep, force, upgrade_packages)
+            self._compile(reqs_files, need_dep, force, upgrade_packages, generate_hashes)
 
-        dep.compile(force, upgrade_packages)
+        dep.compile(force, upgrade_packages, generate_hashes)

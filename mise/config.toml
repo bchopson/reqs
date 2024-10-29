@@ -3,5 +3,5 @@ python = "3.12"
 
 
 [env]
-_.python.venv.path = "{{env.WORKON_HOME}}/reqs"
+_.python.venv.path = "{% if env.VIRTUALENVS_DIR %}{{ env.VIRTUALENVS_DIR }}/reqs{% else %}.venv{% endif %}"
 _.python.venv.create = true

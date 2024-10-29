@@ -23,8 +23,8 @@ def conf_prep() -> config.Config:
     return conf
 
 
-def compile_all(force: bool, conf: config.Config, upgrade_packages: Iter[str] = ()):
-    DepHandler(conf.reqs_dpath).compile_all(force, upgrade_packages)
+def compile_all(force: bool, conf: config.Config, upgrade_packages: Iter[str] = (), generate_hashes=False):
+    DepHandler(conf.reqs_dpath).compile_all(force, upgrade_packages, generate_hashes)
 
 
 @click.group()
@@ -78,30 +78,33 @@ def _config():
 
 @reqs.command()
 @click.option('--force', is_flag=True, help='Force compile regardless of file timestamps')
-def compile(force: bool):
+@click.option('--generate-hashes/--no-generate-hashes', default=True, help='Generate hashes (on by default)')
+def compile(force: bool, generate_hashes: bool):
     """Compile .in to .txt when needed"""
     conf = conf_prep()
-    compile_all(force, conf)
+    compile_all(force, conf, generate_hashes=generate_hashes)
 
 
 @reqs.command()
 @click.argument('packages', nargs=-1)
-def upgrade(packages: list[str]):
+@click.option('--generate-hashes/--no-generate-hashes', default=True, help='Generate hashes (on by default)')
+def upgrade(packages: list[str], generate_hashes: bool):
     """Upgrade package(s) to latest version"""
     conf = conf_prep()
-    compile_all(True, conf, packages)
+    compile_all(True, conf, packages, generate_hashes=generate_hashes)
 
 
 @reqs.command()
 @click.argument('req_fname', default='dev.txt')
 @click.option('--compile/--no-compile', default=True)
 @click.option('--force', is_flag=True, help='Force compile regardless of file timestamps')
-def sync(req_fname: str, compile: bool, force: bool):
+@click.option('--generate-hashes/--no-generate-hashes', default=True, help='Generate hashes (on by default)')
+def sync(req_fname: str, compile: bool, force: bool, generate_hashes: bool):
     """Update active venv and maybe pipx to match spec"""
     conf = conf_prep()
 
     if compile:
-        compile_all(force, conf)
+        compile_all(force, conf, generate_hashes=generate_hashes)
 
     if venv_path := environ.get('VIRTUAL_ENV'):
         # Install reqs into active venv
